@@ -1,3 +1,5 @@
+let ops = ["+","-","",]
+
 let calcState = {
     one: null,
     operator: null,
@@ -10,13 +12,13 @@ let calcState = {
     },
     nextFrame: function(press) {
         if (this.one == null){
-            this.one = press;
+            this.one = Number(press);
         }
         else if (this.one != null && this.operator == null){
             this.operator = press;
         } 
         else if (this.one != null && this.operator != null && this.two == null) {
-            this.two = press;
+            this.two = Number(press);
         }
 
         if (press == "="){
