@@ -11,7 +11,8 @@
     font-size: xx-large;
     height: 75px;
     width: 300px;
-    border: solid 1px black;
+    border: solid 2px black;
+    border-radius: 3px;
     text-align: right;
     margin: 20px;
 }
@@ -45,5 +46,9 @@ p {
 
 .row4 {
     width: 232px;
+}
+
+.container > div > button.equals {
+    background-color: rgb(224, 106, 74);
 }
 
