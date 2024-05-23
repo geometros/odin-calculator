@@ -1,35 +1,62 @@
-let ops = ["+","-","",]
+const ops = ["+","-","×","÷"];
+const nums = ["1","2","3","4","5","6","7","8","9","0"]
 
 let calcState = {
-    one: null,
-    operator: null,
-    two: null,
+    one: "0", //register for first number, holds str
+    operator: null, //holds operator as str
+    two: null, //register for second number
+    computed: true, //is the displayed number computed from a prev operation?
+    point: false, //has a point been entered in current register? should be false if computer is true
     display: document.getElementById('display'),
-    reset: function() {
-        this.one = null;
+    reset: function(newOperand) {
+        this.one = newOperand;
         this.operator = null;
         this.two = null;
+        this.computed = true;
+        this.point = false;
     },
-    nextFrame: function(press) {
-        if (this.one == null){
-            this.one = Number(press);
+    nextFrame: function(press) { //this is where all logic for what to do when a certain button is pressed goes
+        if (ops.includes(press)){
+            if (this.operator == null){ //if display does not contain an operator, then add one. this.one isn't considered as it always holds a value
+                this.display.textContent = this.one + press;
+                this.operator = press;
+                this.point = false;
+                this.computed = false;
+            } else if (this.operator != null && this.two == null){ //if display contains an operator but no second operand, replace operator
+                this.display.textContent = this.one + press; //logic could be simplified by turning the above into an or statement but I want it explicit
+                this.operator = press;
+            } else if (this.operator != null && this.two != null){ //if display already contains two operands and an operator, then compute the value and display value and new operator
+                this.reset(operate(this.one,this.two,buttonOperator(this.operator)))
+                this.display.textContent = this.one + press;
+                this.operator = press;
+                this.computed = false; //when operator is pressed on a complete expression, result is operand + operator, for 2nd operand, not a single computed operand
+            }
         }
-        else if (this.one != null && this.operator == null){
-            this.operator = press;
-        } 
-        else if (this.one != null && this.operator != null && this.two == null) {
-            this.two = Number(press);
+        if (nums.includes(press)){
+            console.log(`Press ${press} was interpreted as number`)
+            if (this.computed){ //if display shows a computed value, we want any number press to replace that value
+                this.display.textContent = press;
+                this.one = press;
+                this.computed = false;
+            } else {
+                if (this.operator == null) {//handle if we are in first or second operand
+                    this.display.textContent += press;
+                    this.one += press;
+                } else {
+                    this.display.textContent += press;
+                    this.two == null ? this.two = press : this.two += press; //concatenation with null does not produce expected behavior, instantiating to "" might be cleaner
+                }
+            }
         }
-
         if (press == "="){
-            console.log(this.one,this.two,this.operator)
-            this.display.textContent = operate(this.one,this.two,buttonOperator(this.operator))
-            calcState.reset()
+            console.log(this.one,this.two,this.operator,operate(this.one,this.two,buttonOperator(this.operator)))
+            this.display.textContent = operate(this.one,this.two,buttonOperator(this.operator));
+            calcState.reset(this.display.textContent)
         }
         if (press == "Clear") {
             this.display.textContent = 0;
-            calcState.reset()
-            }
+            calcState.reset(0)
+        }
     },
 };
 
@@ -63,8 +90,8 @@ function multiply (a,b) {
 function divide (a,b) {
     return a / b;
 }
-function operate (a,b,func) {
-    return func(a,b)
+function operate (a,b,func) { //expect str,str,function
+    return func(Number(a),Number(b))
 }
 
 // Get all buttons on the page
