@@ -29,6 +29,7 @@ let calcState = {
                 this.reset(operate(this.one,this.two,buttonOperator(this.operator)))
                 this.display.textContent = this.one + press;
                 this.operator = press;
+                this.point = false;
                 this.computed = false; //when operator is pressed on a complete expression, result is operand + operator, for 2nd operand, not a single computed operand
             }
         }
@@ -39,12 +40,28 @@ let calcState = {
                 this.one = press;
                 this.computed = false;
             } else {
+                this.display.textContent += press;
                 if (this.operator == null) {//handle if we are in first or second operand
-                    this.display.textContent += press;
                     this.one += press;
                 } else {
-                    this.display.textContent += press;
                     this.two == null ? this.two = press : this.two += press; //concatenation with null does not produce expected behavior, instantiating to "" might be cleaner
+                }
+            }
+        }
+        if (press == "."){
+            if (this.computed){
+                this.display.textContent = press;
+                this.one = press;
+                this.computed = false;
+            } else {
+                if (!this.point){ //if no decimal, add one, if there already is one, then do nothing. make sure to set point to false in operator section above
+                    this.display.textContent += press;
+                    this.point = true;
+                    if (this.operator == null) { //apply decimal to first register if no operator is entered yet, otherwise apply to second register
+                        this.one += press;
+                    } else {
+                        this.two == null ? this.two = press : this.two += press;
+                    }
                 }
             }
         }
