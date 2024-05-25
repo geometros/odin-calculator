@@ -34,7 +34,6 @@ let calcState = {
             }
         }
         if (nums.includes(press)){
-            console.log(`Press ${press} was interpreted as number`)
             if (this.computed){ //if display shows a computed value, we want any number press to replace that value
                 this.display.textContent = press;
                 this.one = press;
@@ -66,7 +65,6 @@ let calcState = {
             }
         }
         if (press == "="){
-            console.log(this.one,this.two,this.operator,operate(this.one,this.two,buttonOperator(this.operator)))
             this.display.textContent = operate(this.one,this.two,buttonOperator(this.operator));
             calcState.reset(this.display.textContent)
         }
@@ -114,10 +112,16 @@ function operate (a,b,func) { //expect str,str,function
 // Get all buttons on the page
 const buttons = document.querySelectorAll('button');
 
-// Add a click listener to each button
-buttons.forEach((button) => {
-    button.addEventListener('click', (event) => {
+buttons.forEach((button) => { // Add a click listener to each button
+    button.addEventListener('click', (event) => {   
         buttonText = event.target.textContent;
         calcState.nextFrame(buttonText)
+    })
+})
+buttons.forEach((button) => { // Add a keypress listener to the document for each button
+    document.addEventListener('keydown', function (event) { 
+        if(event.key == button.textContent){
+            button.click()
+        }
     })
 })

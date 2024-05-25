@@ -21,23 +21,20 @@ p {
     margin: 30px 10px;
 }
 
-.container > div {
-    /* margin: 5px; */
-/*     display: flex; */
-}
-
 .container > div > button {
     height: 50px;
     width: 50px;
     margin: 5px 2.5px;
     border-radius: 50%;
-    background-color: rgb(22, 22, 22);
+    background-color: rgb(3, 3, 3);
     color: antiquewhite;
-    font-size: large;
+    font-size: 25px;
+    
 }
 
 .container > div > button.operator {
-    background-color: darkgrey;
+    background-color: rgb(97, 97, 97);
+    font-size: 25px;
 }
 
 .container > div > button.clear {
